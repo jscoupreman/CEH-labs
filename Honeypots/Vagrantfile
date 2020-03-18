@@ -1,0 +1,30 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+    config.vm.define "honeypot" do | config |
+        config.vm.box = "mwrock/Windows2016"
+
+        config.vm.network "public_network"
+    end
+
+    config.vm.define "client" do | config |
+        config.vm.box = "gusztavvargadr/windows-10"
+
+        config.vm.network "public_network"
+
+        config.vm.guest = :windows
+        config.vm.communicator = "winrm"
+        config.winrm.username = "vagrant"
+        config.winrm.password = "vagrant"
+    end
+
+    config.vm.provider "virtualbox" do | vb |
+		vb.customize ["modifyvm", :id, "--clipboard", "bidirectional"]
+		vb.customize ["modifyvm", :id, "--draganddrop", "bidirectional"]
+		vb.customize ["modifyvm", :id, "--accelerate2dvideo", "on"]
+		vb.customize ["modifyvm", :id, "--accelerate3d", "on"]
+        vb.customize ["modifyvm", :id, "--vram", "256"]
+        vb.customize ["modifyvm", :id, "--graphicscontroller", "vmsvga"]
+    end
+end
